@@ -1,0 +1,6 @@
+
+> watch-party-backend@0.1.0 dev
+> tsx watch src/server.ts
+
+Backend ready on http://localhost:4000
+DASH media served from http://localhost:4000/media/dash

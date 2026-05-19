@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+.DS_Store
+media/input/*
+!media/input/.gitkeep
+media/dash/*
+!media/dash/.gitkeep
+context.md
+README.md
