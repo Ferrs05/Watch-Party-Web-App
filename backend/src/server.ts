@@ -13,9 +13,41 @@ const mediaRoot = path.join(projectRoot, "media");
 const app = express();
 const httpServer = createServer(app);
 const port = Number(process.env.PORT ?? 4000);
-const clientOrigin = process.env.CLIENT_ORIGIN ?? "http://localhost:5173";
+const allowedOrigins = new Set([
+  process.env.CLIENT_ORIGIN ?? "http://localhost:5173",
+  "http://127.0.0.1:5173"
+]);
 
-app.use(cors({ origin: clientOrigin }));
+const corsOptions: cors.CorsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.has(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error(`Origin ${origin} is not allowed by CORS`));
+  }
+};
+
+app.use(cors(corsOptions));
+
+app.get("/", (_req, res) => {
+  res.type("text/plain").send(
+    [
+      "Watch Party backend is running.",
+      "Health check: /health",
+      "DASH manifest: /media/dash/stream.mpd",
+      "Open the frontend at http://localhost:5173"
+    ].join("\n")
+  );
+});
+
+app.get("/media/dash", (_req, res) => {
+  res.type("text/plain").send(
+    "DASH directory is not browsable. Use /media/dash/stream.mpd as the Manifest URL."
+  );
+});
+
 app.use("/media", express.static(mediaRoot));
 
 app.get("/health", (_req, res) => {
@@ -24,7 +56,7 @@ app.get("/health", (_req, res) => {
 
 const io = new Server(httpServer, {
   cors: {
-    origin: clientOrigin,
+    origin: Array.from(allowedOrigins),
     methods: ["GET", "POST"]
   }
 });
@@ -52,5 +84,5 @@ io.on("connection", (socket) => {
 
 httpServer.listen(port, () => {
   console.log(`Backend ready on http://localhost:${port}`);
-  console.log(`DASH media served from http://localhost:${port}/media/dash`);
+  console.log(`DASH manifest: http://localhost:${port}/media/dash/stream.mpd`);
 });

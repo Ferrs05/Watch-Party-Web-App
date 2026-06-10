@@ -16,7 +16,6 @@ export default function App() {
       <div className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-5 px-4 py-5 sm:px-6">
         <header className="flex flex-col gap-3 border-b border-zinc-800 pb-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-sm text-zinc-400">MPEG-DASH + WebSocket</p>
             <h1 className="text-2xl font-semibold tracking-normal">Watch Party</h1>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-300">
