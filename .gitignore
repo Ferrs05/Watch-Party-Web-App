@@ -2,6 +2,9 @@ node_modules
 dist
 .env
 .DS_Store
+*.log
+*.docx
+generate_report.py
 media/input/*
 !media/input/.gitkeep
 media/dash/*
